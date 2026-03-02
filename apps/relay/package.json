@@ -1,0 +1,8 @@
+{
+    "name": "relay",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "dev": "echo 'Relay server - will be set up in Stage 8'"
+    }
+}
