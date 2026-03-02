@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, boolean, integer, timestamp, jsonb, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, boolean, integer, timestamp, jsonb, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
 
 // ═══════════════════════════════════════════
 // MULTI-TENANT CORE
@@ -31,7 +31,9 @@ export const users = pgTable("users", {
     phone: text("phone"),
     photoUrl: text("photo_url"),
     syncedAt: timestamp("synced_at", { withTimezone: true }).defaultNow(),
-});
+}, (table) => [
+    uniqueIndex("users_tenant_azure_unique").on(table.tenantId, table.azureUserId),
+]);
 
 export const groups = pgTable("groups", {
     id: uuid("id").defaultRandom().primaryKey(),
@@ -39,7 +41,9 @@ export const groups = pgTable("groups", {
     azureGroupId: text("azure_group_id").notNull(),
     name: text("name").notNull(),
     syncedAt: timestamp("synced_at", { withTimezone: true }).defaultNow(),
-});
+}, (table) => [
+    uniqueIndex("groups_tenant_azure_unique").on(table.tenantId, table.azureGroupId),
+]);
 
 export const userGroups = pgTable(
     "user_groups",
