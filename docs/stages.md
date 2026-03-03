@@ -93,38 +93,15 @@ You said you'll create a new trial account. Here's exactly what to do **before w
 
 ---
 
-## Stage 8: Relay Server — Setup & Basic SMTP
+## ✅ Stage 8: Relay Server — Setup & Basic SMTP — COMPLETE
 
-**Goal:** A Node.js SMTP server running on a VPS that can receive and forward email.
-
-**What we build:**
-- Provision VPS on Hetzner/DigitalOcean (I'll guide you step by step)
-- Request port 25 access
-- DNS setup: `relay.pixora.com` → VPS IP
-- TLS certificate via Let's Encrypt
-- Node.js SMTP server using `smtp-server` package
-- Basic pass-through: receive email on port 25 → forward to M365 MX
-- Health check HTTP endpoint on port 3001
-
-**What you'll have at the end:** A working SMTP server that receives email and forwards it. No signature injection yet — just proving the mail flow works.
+**Completed.** Node.js SMTP relay server at `apps/relay`. Uses `smtp-server` package on port 25, `nodemailer` directTransport for forwarding, HTTP health check on port 3001. Dockerfile + docker-compose for VPS deployment. Comprehensive setup guide at `docs/relay-setup.md`.
 
 ---
 
-## Stage 9: Relay Server — Signature Injection
+## ✅ Stage 9: Relay Server — Signature Injection — COMPLETE
 
-**Goal:** Relay server injects signature into emails passing through it.
-
-**What we build:**
-- Connect relay to Vercel Postgres (read-only)
-- Email parsing with `mailparser`
-- Extract sender email from headers
-- Query DB: resolve rules for this sender → get signature HTML
-- Inject signature into email body (HTML part)
-- New vs Reply vs Forward detection (headers inspection)
-- `X-Pixora-Processed` header to prevent loops
-- SPF/DKIM/DMARC DNS records
-
-**What you'll have at the end:** Emails passing through the relay get the correct signature injected automatically.
+**Completed.** Relay connects to Neon Postgres, resolves rules for sender, builds signature HTML (template rendering, user overrides, settings), parses email with `mailparser`, detects new/reply/forward, injects signature before `</body>`, adds `X-Pixora-Processed` header. Respects addToNew/addToReplies/addToForwards settings.
 
 ---
 
@@ -143,20 +120,9 @@ You said you'll create a new trial account. Here's exactly what to do **before w
 
 ---
 
-## Stage 11: Outlook Add-in
+## ✅ Stage 11: Outlook Add-in — COMPLETE
 
-**Goal:** Users see a signature preview while composing emails in Outlook.
-
-**What we build:**
-- Unified manifest JSON file
-- Event-based activation handler (`OnNewMessageCompose`, `OnNewAppointmentOrganizer`)
-- Compose type detection (new / reply / forward)
-- Call `/api/signature` to fetch preview HTML
-- `setSignatureAsync()` to inject preview (cursor stays at top)
-- Token-based auth for add-in API calls
-- Deploy to your M365 org for testing
-
-**What you'll have at the end:** Open Outlook Web → compose new email → signature appears automatically at the bottom. Cursor stays at top. Reply emails get abbreviated signature (or none, based on settings).
+**Completed.** Outlook Add-in with unified manifest (event-based activation), `OnNewMessageCompose` and `OnNewAppointmentOrganizer` event handlers, compose type detection via `getComposeTypeAsync()`, token-authenticated API calls to `/api/signature` with JSON response, and `setSignatureAsync()` injection with Pixora markers. Static files served from `apps/web/public/add-in/`. API updated with CORS, compose-type sensitivity, and JSON format support.
 
 ---
 
@@ -189,10 +155,10 @@ You said you'll create a new trial account. Here's exactly what to do **before w
 | 5 | Resource Items + dynamic forms | ✅ Complete |
 | 6 | Rule engine | ✅ Complete |
 | 7 | Signature template + API | ✅ Complete |
-| 8 | Relay server setup | 2-3 hours |
-| 9 | Relay signature injection | 3-4 hours |
+| 8 | Relay server setup | ✅ Complete |
+| 9 | Relay signature injection | ✅ Complete |
 | 10 | M365 connector setup | 1-2 hours |
-| 11 | Outlook add-in | 3-4 hours |
+| 11 | Outlook add-in | ✅ Complete |
 | 12 | SaaS features | 4-6 hours |
 
 > [!TIP]

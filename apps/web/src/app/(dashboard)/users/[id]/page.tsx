@@ -79,9 +79,17 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
             {/* Profile header */}
             <div className="bg-[#12121a] border border-[#1e1e2e] rounded-2xl p-6 mb-4">
                 <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl font-bold shrink-0">
-                        {initials}
-                    </div>
+                    {u.photoUrl ? (
+                        <img
+                            src={u.photoUrl}
+                            alt={u.displayName || "User"}
+                            className="w-16 h-16 rounded-xl object-cover shrink-0 border border-blue-500/30"
+                        />
+                    ) : (
+                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl font-bold shrink-0">
+                            {initials}
+                        </div>
+                    )}
                     <div>
                         <h1 className="text-xl font-bold text-white">
                             {u.displayName || "Unknown User"}

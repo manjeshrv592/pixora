@@ -176,3 +176,33 @@ export async function fetchGraphGroupMembers(
     // Filter to only user objects
     return allMembers.filter((m) => m["@odata.type"] === "#microsoft.graph.user");
 }
+
+/**
+ * Fetch a user's profile photo from MS Graph.
+ * Returns null if the user has no photo (404).
+ */
+export async function fetchGraphUserPhoto(
+    accessToken: string,
+    userId: string
+): Promise<string | null> {
+    try {
+        const url = `${GRAPH_BASE}/users/${userId}/photo/$value`;
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!response.ok) {
+            // 404 = no photo set, which is normal
+            return null;
+        }
+
+        const contentType = response.headers.get("Content-Type") || "image/jpeg";
+        const arrayBuffer = await response.arrayBuffer();
+        const base64 = Buffer.from(arrayBuffer).toString("base64");
+        return `data:${contentType};base64,${base64}`;
+    } catch {
+        return null;
+    }
+}

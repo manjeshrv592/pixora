@@ -1,18 +1,18 @@
 import { db } from "@/lib/db/client";
 import { users, templates } from "@/lib/db/schema";
 import { getTenantId } from "@/lib/auth/helpers";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { buildSignatureForUser } from "@/lib/signature-builder";
 import {
     FileCode2,
     ArrowLeft,
     User,
     Eye,
-    Copy,
     Package,
     CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
+import CopyButton from "./CopyButton";
 
 const SCOPE_COLORS: Record<string, string> = {
     global: "text-blue-400 bg-blue-500/10 border-blue-500/20",
@@ -254,27 +254,3 @@ export default async function SignaturePreviewPage({ searchParams }: PreviewPage
     );
 }
 
-// Client component for copy button
-function CopyButton({ html }: { html: string }) {
-    return (
-        <form
-            action={async () => {
-                "use server";
-                // Copy handled client-side via onClick below
-            }}
-        >
-            <button
-                type="button"
-                onClick={() => {
-                    if (typeof navigator !== "undefined") {
-                        navigator.clipboard.writeText(html);
-                    }
-                }}
-                className="inline-flex items-center gap-1.5 text-xs text-[#555] hover:text-white transition-colors cursor-pointer"
-            >
-                <Copy size={12} />
-                Copy HTML
-            </button>
-        </form>
-    );
-}

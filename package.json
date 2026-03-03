@@ -4,6 +4,9 @@
   "scripts": {
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
+    "relay:dev": "pnpm --filter relay dev",
+    "relay:build": "pnpm --filter relay build",
+    "relay:start": "pnpm --filter relay start",
     "db:generate": "pnpm --filter web db:generate",
     "db:migrate": "pnpm --filter web db:migrate",
     "db:studio": "pnpm --filter web db:studio"

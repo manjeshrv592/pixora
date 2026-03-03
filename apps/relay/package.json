@@ -1,8 +1,26 @@
 {
     "name": "relay",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "private": true,
+    "type": "module",
     "scripts": {
-        "dev": "echo 'Relay server - will be set up in Stage 8'"
+        "dev": "tsx watch src/index.ts",
+        "build": "tsc",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "@neondatabase/serverless": "^1.0.2",
+        "drizzle-orm": "^0.45.1",
+        "mailparser": "^3.7.2",
+        "nodemailer": "^6.10.1",
+        "smtp-server": "^3.13.6"
+    },
+    "devDependencies": {
+        "@types/mailparser": "^3.4.5",
+        "@types/nodemailer": "^6.4.17",
+        "@types/smtp-server": "^3.5.11",
+        "@types/node": "^20",
+        "tsx": "^4.19.4",
+        "typescript": "^5"
     }
 }

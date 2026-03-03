@@ -119,16 +119,24 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
                                                     href={`/users/${user.id}`}
                                                     className="flex items-center gap-3 group"
                                                 >
-                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">
-                                                        {user.displayName
-                                                            ? user.displayName
-                                                                .split(" ")
-                                                                .map((n: string) => n[0])
-                                                                .join("")
-                                                                .toUpperCase()
-                                                                .slice(0, 2)
-                                                            : "?"}
-                                                    </div>
+                                                    {user.photoUrl ? (
+                                                        <img
+                                                            src={user.photoUrl}
+                                                            alt={user.displayName || "User"}
+                                                            className="w-8 h-8 rounded-full object-cover shrink-0 border border-blue-500/30"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold shrink-0">
+                                                            {user.displayName
+                                                                ? user.displayName
+                                                                    .split(" ")
+                                                                    .map((n: string) => n[0])
+                                                                    .join("")
+                                                                    .toUpperCase()
+                                                                    .slice(0, 2)
+                                                                : "?"}
+                                                        </div>
+                                                    )}
                                                     <span className="text-sm text-white font-medium group-hover:text-blue-400 transition-colors">
                                                         {user.displayName || "—"}
                                                     </span>

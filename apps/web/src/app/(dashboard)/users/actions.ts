@@ -8,6 +8,7 @@ import {
     fetchGraphUsers,
     fetchGraphGroups,
     fetchGraphGroupMembers,
+    fetchGraphUserPhoto,
 } from "@/lib/graph";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -49,6 +50,9 @@ export async function syncUsers(): Promise<{ success: boolean; count: number; er
             const email = graphUser.mail || graphUser.userPrincipalName;
             const phone = graphUser.businessPhones?.[0] || null;
 
+            // Fetch profile photo (returns null if none set)
+            const photoUrl = await fetchGraphUserPhoto(accessToken, graphUser.id);
+
             await db
                 .insert(users)
                 .values({
@@ -61,6 +65,7 @@ export async function syncUsers(): Promise<{ success: boolean; count: number; er
                     country: graphUser.country,
                     city: graphUser.city,
                     phone,
+                    photoUrl,
                     syncedAt: new Date(),
                 })
                 .onConflictDoUpdate({
@@ -73,6 +78,7 @@ export async function syncUsers(): Promise<{ success: boolean; count: number; er
                         country: graphUser.country,
                         city: graphUser.city,
                         phone,
+                        photoUrl,
                         syncedAt: new Date(),
                     },
                 });
