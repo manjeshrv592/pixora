@@ -71,68 +71,25 @@ You said you'll create a new trial account. Here's exactly what to do **before w
 
 ---
 
-## Stage 4: Resource Type Builder
+## ✅ Stage 4: Resource Type Builder — COMPLETE
 
-**Goal:** Admin can define custom resource schemas (like Sanity content builder).
-
-**What we build:**
-- "Resource Types" page listing all types
-- "New Resource Type" form — name, slug, icon
-- Field builder UI — add/remove/reorder fields
-- Each field: name, label, type (text/image/url/date/etc.), required, validation rules
-- Save schema as JSONB to `resource_types.fields_schema`
-- Edit and delete resource types
-
-**What you'll have at the end:** You can create resource types like "Certification" (with fields: logo, title, alt_text, link) and "Banner" (with fields: image, link, start_date, end_date) entirely from the UI. No code changes needed to add new resource types.
+**Completed.** Resource Type Builder with full CRUD. Field schema editor supporting 10 field types with type-specific validation. List page with card grid and pagination. Detail, edit, and delete flows. Slug uniqueness per tenant.
 
 ---
 
-## Stage 5: Resource Items + Dynamic Forms
+## ✅ Stage 5: Resource Items + Dynamic Forms — COMPLETE
 
-**Goal:** Admin can create resource items using dynamically generated forms.
+**Completed.** Resource Items CRUD with dynamic forms generated from schema. TipTap rich text editor. Image upload to Cloudflare R2. All 10 field types supported. Time-bound resources with status indicators (Active/Scheduled/Expired). List page with type selector tabs.
 
-**What we build:**
-- "Resources" page — pick a resource type → see all items of that type
-- "New Item" → dynamic form generated from the `fields_schema`
-- File upload for `image` type fields → Cloudflare R2
-- Date pickers for `date` type fields
-- Rich text editor for `richtext` type fields
-- Validation based on schema rules
-- Edit and delete items
-- Time-bound resource support (`valid_from` / `valid_until` with visual indicator)
+## ✅ Stage 6: Rule Engine — COMPLETE
 
-**What you'll have at the end:** You can create "ISO 27001" certification with a logo, title, and link. You can create "Holiday Banner" that's active only Dec 15–Jan 5. All through the UI.
+**Completed.** Rule Engine with full CRUD. Five scope types (Global, Country, Job Title, Group, Individual) with priority hierarchy. Dynamic RuleForm with scope-specific value inputs. Rules list with scope filter tabs. Rule Preview page — select a user and see exactly which resources they receive with matched scope badges.
 
 ---
 
-## Stage 6: Rule Engine
+## ✅ Stage 7: Signature Template + API — COMPLETE
 
-**Goal:** Admin can assign resource items to users based on rules.
-
-**What we build:**
-- Rule assignment UI per resource item
-- Scope types: Global, Country, Job Title, Group, Individual
-- Priority ordering (drag to reorder)
-- Rule preview: "Show me what User X's assigned resources would be"
-- Conflict resolution logic (individual > group > job_title > country > global)
-
-**What you'll have at the end:** You can assign "ISO 27001" globally, "GDPR Badge" only to Germany users, and override specific users. The preview shows exactly what each user would get.
-
----
-
-## Stage 7: Signature Template + API
-
-**Goal:** Signature HTML is generated from templates + resolved rules.
-
-**What we build:**
-- Template editor page (HTML editor with `{{placeholder}}` autocomplete)
-- Available placeholders from: user fields + resource type fields
-- Signature builder logic: given an email → resolve rules → build HTML
-- `/api/signature?email=user@domain.com` endpoint
-- Live preview panel (select a user → see their rendered signature)
-- Individual user signature override page
-
-**What you'll have at the end:** Hit `/api/signature?email=testuser@yourdomain.onmicrosoft.com` and get back a fully rendered HTML signature with the correct certifications, legal text, and banner based on that user's rules. You can test this with Postman or browser.
+**Completed.** Signature template editor with placeholder autocomplete (user fields + resource type fields). Signature builder engine (Handlebars-style rendering). Template CRUD with default management. Signature preview page (select user + template → rendered HTML). `/api/signature?email=` public endpoint. Per-user signature overrides (custom template, add/remove items). Signature settings page (new/replies/forwards/calendar toggles, reply template selector).
 
 ---
 
@@ -228,10 +185,10 @@ You said you'll create a new trial account. Here's exactly what to do **before w
 | 1 | Project scaffolding + DB | ✅ Complete |
 | 2 | Auth + login | ✅ Complete |
 | 3 | User/group sync from M365 | ✅ Complete |
-| 4 | Resource Type Builder | 3-4 hours |
-| 5 | Resource Items + dynamic forms | 3-4 hours |
-| 6 | Rule engine | 3-4 hours |
-| 7 | Signature template + API | 3-4 hours |
+| 4 | Resource Type Builder | ✅ Complete |
+| 5 | Resource Items + dynamic forms | ✅ Complete |
+| 6 | Rule engine | ✅ Complete |
+| 7 | Signature template + API | ✅ Complete |
 | 8 | Relay server setup | 2-3 hours |
 | 9 | Relay signature injection | 3-4 hours |
 | 10 | M365 connector setup | 1-2 hours |

@@ -156,6 +156,25 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
                     </div>
                 )}
             </div>
+
+            {/* Signature Override */}
+            <div className="bg-[#12121a] border border-[#1e1e2e] rounded-2xl p-6 mt-4">
+                <Link
+                    href={`/users/${id}/signature`}
+                    className="flex items-center justify-between group"
+                >
+                    <div>
+                        <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+                            <Briefcase size={16} className="text-pink-400" />
+                            Signature Override
+                        </h2>
+                        <p className="text-[#555] text-xs mt-1">
+                            Customize the email signature for this user
+                        </p>
+                    </div>
+                    <ArrowLeft size={14} className="text-[#555] group-hover:text-white rotate-180 transition-colors" />
+                </Link>
+            </div>
         </div>
     );
 }
