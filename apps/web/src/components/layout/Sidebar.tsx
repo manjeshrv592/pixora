@@ -10,7 +10,9 @@ import {
     Package,
     Scale,
     FileCode2,
+    CreditCard,
     Settings,
+    ShieldCheck,
     ChevronLeft,
     ChevronRight,
 } from "lucide-react";
@@ -24,12 +26,17 @@ const navItems = [
     { label: "Resources", href: "/resources", icon: Package },
     { label: "Rules", href: "/rules", icon: Scale },
     { label: "Templates", href: "/templates", icon: FileCode2 },
+    { label: "Billing", href: "/billing", icon: CreditCard },
     { label: "Settings", href: "/settings", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ isSuperAdmin = false }: { isSuperAdmin?: boolean }) {
     const pathname = usePathname();
     const { collapsed, toggle } = useSidebar();
+
+    const allItems = isSuperAdmin
+        ? [...navItems, { label: "Admin Panel", href: "/admin", icon: ShieldCheck }]
+        : navItems;
 
     return (
         <aside
@@ -62,7 +69,7 @@ export function Sidebar() {
 
             {/* Navigation */}
             <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-                {navItems.map((item) => {
+                {allItems.map((item) => {
                     const isActive =
                         item.href === "/"
                             ? pathname === "/"
@@ -104,3 +111,4 @@ export function Sidebar() {
         </aside>
     );
 }
+

@@ -21,17 +21,20 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
 export default function DashboardLayoutClient({
     children,
+    isSuperAdmin = false,
 }: {
     children: React.ReactNode;
+    isSuperAdmin?: boolean;
 }) {
     return (
         <SessionProvider>
             <SidebarProvider>
                 <div className="min-h-screen bg-[#0a0a0f]">
-                    <Sidebar />
+                    <Sidebar isSuperAdmin={isSuperAdmin} />
                     <DashboardContent>{children}</DashboardContent>
                 </div>
             </SidebarProvider>
         </SessionProvider>
     );
 }
+

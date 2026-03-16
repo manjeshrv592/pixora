@@ -33,3 +33,31 @@ export async function getTenantId(): Promise<string> {
     }
     return session.user.tenantId;
 }
+
+/**
+ * Check if the current user is a super admin.
+ * Compares session email against SUPER_ADMIN_EMAILS env var (comma-separated).
+ */
+export async function isSuperAdmin(): Promise<boolean> {
+    const session = await auth();
+    if (!session?.user?.email) return false;
+
+    const emails = (process.env.SUPER_ADMIN_EMAILS || "")
+        .split(",")
+        .map((e) => e.trim().toLowerCase())
+        .filter(Boolean);
+
+    return emails.includes(session.user.email.toLowerCase());
+}
+
+/**
+ * Require super admin access. Redirects to / if not authorized.
+ */
+export async function requireSuperAdmin() {
+    const session = await requireAuth();
+    const superAdmin = await isSuperAdmin();
+    if (!superAdmin) {
+        redirect("/");
+    }
+    return session;
+}
