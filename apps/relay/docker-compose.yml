@@ -10,8 +10,8 @@ services:
       - .env
     volumes:
       # Mount Let's Encrypt certificates (created by certbot on host)
-      - /etc/letsencrypt/live/relay.pixora.com/privkey.pem:/certs/privkey.pem:ro
-      - /etc/letsencrypt/live/relay.pixora.com/fullchain.pem:/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/relay.simtech.one/privkey.pem:/certs/privkey.pem:ro
+      - /etc/letsencrypt/live/relay.simtech.one/fullchain.pem:/certs/fullchain.pem:ro
     environment:
       - NODE_ENV=production
       - TLS_KEY_PATH=/certs/privkey.pem

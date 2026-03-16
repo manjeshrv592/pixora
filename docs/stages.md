@@ -128,18 +128,72 @@ You said you'll create a new trial account. Here's exactly what to do **before w
 
 ## Stage 12: SaaS Features
 
-**Goal:** Self-service onboarding, billing, and admin panel.
+**Goal:** Self-service onboarding, billing, and admin panel. Split into sub-stages — work on one at a time.
+
+---
+
+### ✅ Stage 12A: Landing Page + Admin Consent Onboarding — COMPLETE
+
+**Completed.** Public landing page at `/landing` with hero, feature cards, and "Connect to Microsoft 365" CTA. Admin consent flow via `/api/onboarding/consent` (CSRF-protected redirect to Microsoft) and `/api/onboarding/callback` (tenant creation + auto user/group sync). Login page shows onboarding success banner with sync counts.
+
+---
+
+### ✅ Stage 12B: Razorpay Billing Integration — COMPLETE
+
+**Completed.** Razorpay client with lazy initialization and 3-tier plan config (Starter / Business / Enterprise × Monthly / Yearly). Billing page with monthly/yearly toggle and plan cards. Server actions for creating subscriptions (with Razorpay customer management), cancelling, and fetching current plan. Webhook handler at `/api/webhooks/razorpay` with HMAC-SHA256 signature validation handling 5 event types (activated, charged, cancelled, paused, payment.failed). DB schema updated with `subscriptions` table and `razorpayCustomerId` on tenants. Sidebar updated with "Billing" link.
+
+---
+
+### ✅ Stage 12C: Super-Admin Dashboard — COMPLETE
+
+**Completed.** Super-admin route group with email-based access guard (`SUPER_ADMIN_EMAILS` env var). Admin page at `/admin` with summary cards and tenant list table (name, domain, status, user count, subscription plan, created date). Server actions for listing all tenants (with user count + subscription joins), suspending, and activating. Conditional "Admin Panel" sidebar link for super-admin users.
+
+---
+
+### Stage 12D: Subscription Enforcement
+
+**Goal:** Suspended tenants are blocked from using the product.
 
 **What we build:**
-- Landing page with "Connect to Microsoft 365" button
-- Admin consent flow redirect + callback handler
-- Automated initial user sync on onboarding
-- Razorpay integration (subscriptions API, webhooks, payment links)
-- Super-admin dashboard (list tenants, suspend/activate)
-- Subscription enforcement (block relay if suspended)
-- PowerShell script generator for connector setup
+- Modify `/api/signature` route — check `tenants.status` before building signature; return 403 if suspended (blocks both relay server and Outlook add-in)
+- Modify `(dashboard)/layout.tsx` — check tenant status; if suspended, show a full-page suspension notice with link to billing instead of the normal dashboard
+- Trial expiration logic: tenants in `'trial'` status for 14+ days without a subscription get auto-blocked
 
-**What you'll have at the end:** A second organization can sign up, connect their M365, and start using the product — all self-service.
+**What you'll have at the end:** Suspended tenants can't use signatures and see a clear message to subscribe. Active tenants are unaffected.
+
+---
+
+### Stage 12E: PowerShell Script Generator
+
+**Goal:** Give tenant admins a ready-to-run PowerShell script for setting up M365 mail flow connectors.
+
+**Prerequisite:** Add `RELAY_VPS_IP=your-vps-ip` to `.env`.
+
+**What we build:**
+- `(dashboard)/setup/page.tsx` — setup guide page with:
+  - Pre-filled PowerShell script for creating Send Connector (outbound → relay VPS)
+  - Pre-filled PowerShell script for creating Receive Connector (inbound from relay IP)
+  - Pre-filled PowerShell Transport Rule (route emails through connector, skip if `X-Pixora-Processed` header)
+  - Copy-to-clipboard button for each script block
+  - Step-by-step instructions with prerequisites (Exchange Online PowerShell module)
+- Sidebar nav updated with "Setup Guide" link
+
+**What you'll have at the end:** Tenant admin can copy and run the exact PowerShell commands needed to connect their M365 to your relay — no manual config guessing.
+
+---
+
+### Stage 12F: Add-in Auth Refactor + AppSource Publishing *(Deferred)*
+
+**Goal:** Replace static `ADDIN_TOKEN` with Exchange identity tokens for a universal, per-tenant add-in.
+
+> [!NOTE]
+> **Recommended to defer** until after the first client is fully live. The static token works fine for sideloaded add-ins. This refactor is only critical when publishing to Microsoft AppSource (public store).
+
+**What we'd build (when ready):**
+- Refactor `commands.js` to use `getUserIdentityTokenAsync()` instead of static Bearer token
+- Update `/api/signature` to validate Exchange identity tokens (JWT verification against Exchange metadata)
+- Extract user email from token claims — no more `?email=` query param
+- Submit add-in to Microsoft AppSource for public availability
 
 ---
 
@@ -159,7 +213,13 @@ You said you'll create a new trial account. Here's exactly what to do **before w
 | 9 | Relay signature injection | ✅ Complete |
 | 10 | M365 connector setup | 1-2 hours |
 | 11 | Outlook add-in | ✅ Complete |
-| 12 | SaaS features | 4-6 hours |
+| 12 | SaaS features (split below) | — |
+| 12A | Landing page + admin consent onboarding | ✅ Complete |
+| 12B | Razorpay billing integration | ✅ Complete |
+| 12C | Super-admin dashboard | ✅ Complete |
+| 12D | Subscription enforcement | 30 min |
+| 12E | PowerShell script generator | 30 min |
+| 12F | Add-in auth refactor + AppSource | Deferred |
 
 > [!TIP]
 > **Prompt to start a new conversation:**

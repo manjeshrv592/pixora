@@ -24,7 +24,7 @@ Add these DNS records:
 | Type | Name | Value | Proxy |
 |------|------|-------|-------|
 | A | `relay` | `YOUR_VPS_IP` | DNS only (gray cloud) |
-| MX | `relay` | `relay.pixora.com` | — |
+| MX | `relay` | `relay.simtech.one` | — |
 
 > [!IMPORTANT]
 > **DO NOT** proxy the relay subdomain through Cloudflare (orange cloud). SMTP traffic must go directly to the VPS IP.
@@ -74,11 +74,11 @@ ufw status
 apt install certbot -y
 
 # Get certificate (standalone mode — stops any service on port 80)
-certbot certonly --standalone -d relay.pixora.com --agree-tos -m your@email.com
+certbot certonly --standalone -d relay.simtech.one --agree-tos -m your@email.com
 
 # Certificate files will be at:
-# /etc/letsencrypt/live/relay.pixora.com/privkey.pem
-# /etc/letsencrypt/live/relay.pixora.com/fullchain.pem
+# /etc/letsencrypt/live/relay.simtech.one/privkey.pem
+# /etc/letsencrypt/live/relay.simtech.one/fullchain.pem
 
 # Auto-renew (certbot installs a systemd timer by default)
 certbot renew --dry-run
@@ -106,7 +106,7 @@ cd /opt/pixora-relay
 cp .env.example .env
 nano .env
 # Set:
-#   RELAY_HOSTNAME=relay.pixora.com
+#   RELAY_HOSTNAME=relay.simtech.one
 #   SMTP_PORT=25
 #   HEALTH_PORT=3001
 #   NODE_ENV=production
@@ -157,7 +157,7 @@ pm2 logs pixora-relay
 
 ### Health Check
 ```bash
-curl http://relay.pixora.com:3001/health
+curl http://relay.simtech.one:3001/health
 # Expected: {"status":"ok","service":"pixora-relay",...}
 ```
 
@@ -167,15 +167,15 @@ curl http://relay.pixora.com:3001/health
 apt install swaks -y
 
 swaks --to test@example.com \
-      --from test@relay.pixora.com \
-      --server relay.pixora.com \
+      --from test@relay.simtech.one \
+      --server relay.simtech.one \
       --port 25
 ```
 
 ### Telnet Test
 ```bash
-telnet relay.pixora.com 25
-# Should see: 220 relay.pixora.com ESMTP Pixora Relay Server
+telnet relay.simtech.one 25
+# Should see: 220 relay.simtech.one ESMTP Pixora Relay Server
 ```
 
 ---
@@ -186,7 +186,7 @@ These will be needed when we set up M365 connectors in Stage 9-10:
 
 | Type | Name | Value |
 |------|------|-------|
-| TXT (SPF) | `relay.pixora.com` | `v=spf1 ip4:YOUR_VPS_IP -all` |
+| TXT (SPF) | `relay.simtech.one` | `v=spf1 ip4:YOUR_VPS_IP -all` |
 | TXT (DKIM) | Set up later | DKIM signing in Stage 9 |
 | TXT (DMARC) | `_dmarc.relay` | `v=DMARC1; p=none; rua=mailto:dmarc@pixora.com` |
 
@@ -196,6 +196,6 @@ These will be needed when we set up M365 connectors in Stage 9-10:
 
 Set up a health check monitor at [UptimeRobot](https://uptimerobot.com) or [Better Stack](https://betterstack.com):
 
-- **URL**: `http://relay.pixora.com:3001/health`
+- **URL**: `http://relay.simtech.one:3001/health`
 - **Interval**: 5 minutes
 - **Alert**: Email or Slack notification on failure
